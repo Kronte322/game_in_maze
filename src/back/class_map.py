@@ -6,6 +6,7 @@ import time
 import sys
 from src.back.map_generator import *
 from src.back.constants import *
+import src.front.start_menu
 
 random.seed(time.time())
 # random.seed(12)
@@ -143,7 +144,7 @@ class Map:
                 self.tiles_for_current_room[
                     (self.GetPositionOfTile(player_position), self.GetTile(player_position))] = True
             elif self.GetTile(player_position) in [CHAR_FOR_EXIT]:
-                return None
+                src.front.start_menu.ProcessingEndMenu()
 
             for i in current_room:
                 self.visited_tiles[i] = True

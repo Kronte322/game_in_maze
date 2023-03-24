@@ -1,5 +1,5 @@
 """File contains execute"""
 
-from src.front.menu import ProcessingMenu
+from src.front.start_menu import ProcessingStartMenu
 
-ProcessingMenu()
+ProcessingStartMenu()
