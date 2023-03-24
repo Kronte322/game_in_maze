@@ -2,12 +2,14 @@
 
 import sys
 import pygame
+import pygame_gui
+from src.back.in_game_ui import Ui
 from src.back.constants import *
 from src.back import class_map
 from src.back import class_player
 
 
-def ProcessingLoop(screen):
+def ProcessingLoop(screen, resume=False):
     sys.setrecursionlimit(DEEP_OF_RECURSION)
 
     mappa = class_map.Map()
@@ -17,12 +19,15 @@ def ProcessingLoop(screen):
 
     mappa.SpawnPosition()
 
+    ui = Ui()
+
     running = True
     while running:
-        clock.tick(FRAMES_PER_SEC)
+        time_delta = clock.tick(FRAMES_PER_SEC)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            ui.ProcessEvents(event)
 
         player.move(mappa)
 
@@ -30,7 +35,10 @@ def ProcessingLoop(screen):
 
         mappa.SetCurrentRoom(player.GetPosition())
         mappa.Render(screen)
+
         player.render(screen)
+
+        ui.Blit(time_delta, screen=screen)
 
         pygame.display.flip()
 

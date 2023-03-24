@@ -1,5 +1,5 @@
 """File contains execute"""
 
-from src.front.start_menu import ProcessingStartMenu
+from src.front.ui import StartTheGame
 
-ProcessingStartMenu()
+StartTheGame()

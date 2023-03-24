@@ -14,7 +14,7 @@ SIZE_OF_MOVE_BOX = [600, 300]
 SIZE_OF_UNSCOPED_MINIMAP = [300, 300]
 SIZE_OF_SCOPED_MINIMAP = [600, 600]
 SIZE_OF_MINIMAP = SIZE_OF_UNSCOPED_MINIMAP
-SIZE_OF_MAP = (16, 16)
+SIZE_OF_MAP = [16, 16]
 
 # sizes of tiles
 SIZE_OF_CHARACTER = 48
@@ -42,3 +42,18 @@ LENGTH_OF_PATHS = 4
 FRAMES_PER_SEC = 60
 DEEP_OF_RECURSION = 10000000
 NUM_OF_PNGS_FOR_FLOOR = 14
+
+# preferences for menus
+SET_WITH_DIFFICULTIES = [('I’m Too Young to Die', 1), ('Hurt Me Plenty', 2), ('Ultra Violence', 3), ('Nightmare', 4),
+                         ('Just A Psycho', 5)]
+SET_WITH_ALGOS = [('DFS', 1), ('Prima', 2)]
+SET_WITH_SIZES = [('Tiny [16, 16]', [16, 16]), ('Classic [32, 32]', [32, 32]), ('Large [64, 64]', [64, 64]),
+                  ('Huge [128, 128]', [128, 128])]
+
+# cases
+DIFFICULTY = 1
+ALGO_FOR_GENERATION = 'DFS'
+
+# places for in-game ui
+PLACE_OF_SETTINGS_BUTTON = [10, 10]
+SIZE_OF_SETTINGS_BUTTON = [100, 50]

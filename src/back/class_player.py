@@ -7,6 +7,7 @@ import pygame
 class Player:
     def __init__(self):
         self.speed = SPEED_OF_CHARACTER
+        self.side = 'right'
 
         self.hit_box = pygame.Rect((SPAWN_POSITION[0], SPAWN_POSITION[1]), (SIZE_OF_CHARACTER, SIZE_OF_CHARACTER))
         self.moveBox = (
@@ -37,6 +38,9 @@ class Player:
                                         self.hit_box.y + SIZE_OF_CHARACTER - self.speed - 8)):
                     self.hit_box.y -= self.speed
         if key[pygame.K_a]:
+            if self.side == 'right':
+                self.side = 'left'
+                self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
             if mappa.CanStandThere(
                     (self.hit_box.x - self.speed, self.hit_box.y + SIZE_OF_CHARACTER)):
                 self.hit_box.x -= self.speed
@@ -47,6 +51,9 @@ class Player:
                                         self.hit_box.y + SIZE_OF_CHARACTER + self.speed)):
                     self.hit_box.y += self.speed
         if key[pygame.K_d]:
+            if self.side == 'left':
+                self.side = 'right'
+                self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
             if mappa.CanStandThere(
                     (self.hit_box.x + SIZE_OF_CHARACTER + self.speed,
                      self.hit_box.y + SIZE_OF_CHARACTER)):
