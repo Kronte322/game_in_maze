@@ -10,6 +10,8 @@ from src.back import class_player
 
 
 def ProcessingLoop(screen, resume=False):
+    """that function performs main game loop"""
+
     sys.setrecursionlimit(DEEP_OF_RECURSION)
 
     mappa = class_map.Map()

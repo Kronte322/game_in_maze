@@ -6,6 +6,8 @@ from src.back.constants import *
 
 class Ui:
     def __init__(self):
+        """initialize in-game user interface"""
+
         self.manager = pygame_gui.UIManager(SIZE_OF_DISPLAY)
         self.settings_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(PLACE_OF_SETTINGS_BUTTON, SIZE_OF_SETTINGS_BUTTON),
@@ -13,6 +15,8 @@ class Ui:
             manager=self.manager)
 
     def ProcessEvents(self, event):
+        """that function processing events for UI"""
+
         key = pygame.key.get_pressed()
         if key[pygame.K_ESCAPE]:
             src.front.ui.InGameMenu()
@@ -22,5 +26,7 @@ class Ui:
         self.manager.process_events(event)
 
     def Blit(self, time_delta, screen):
+        """function for blit UI on screen"""
+
         self.manager.draw_ui(screen)
         self.manager.update(time_delta)

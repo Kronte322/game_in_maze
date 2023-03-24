@@ -6,6 +6,8 @@ import pygame
 
 class Player:
     def __init__(self):
+        """initialize player"""
+
         self.speed = SPEED_OF_CHARACTER
         self.side = 'right'
 
@@ -25,6 +27,8 @@ class Player:
         self.image.blit(self.image_of_character, (0, 0))
 
     def GetPosition(self):
+        """that function gives position of player on the screen"""
+
         return [self.hit_box.x + SIZE_OF_CHARACTER // 2, self.hit_box.y + SIZE_OF_CHARACTER]
 
     def move(self, mappa):
@@ -72,4 +76,6 @@ class Player:
             mappa.MoveMap([0, -self.speed])
 
     def render(self, screen):
+        """draw player on the screen"""
+
         screen.blit(self.image, (self.hit_box.x, self.hit_box.y))

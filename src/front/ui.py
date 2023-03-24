@@ -10,16 +10,22 @@ display = pygame.display.set_mode((SIZE_OF_DISPLAY[0], SIZE_OF_DISPLAY[1]))
 
 
 def StartTheGame():
+    """function that performs start of the game"""
+
     pygame.init()
     pygame.display.set_caption('Maze Enjoyer')
     ProcessingStartMenu()
 
 
 def start_the_game():
+    """function for start game button in menu"""
+
     src.front.main_loop.ProcessingLoop(display)
 
 
 def ProcessingStartMenu():
+    """that function perform start menu"""
+
     start_menu = pygame_menu.Menu('Welcome', 400, 300,
                                   theme=pygame_menu.themes.THEME_BLUE)
 
@@ -30,6 +36,8 @@ def ProcessingStartMenu():
 
 
 def retry_the_game():
+    """function for retry game button in menu"""
+
     src.back.constants.DIFFICULTY = 1
     src.back.constants.ALGO_FOR_GENERATION = 'DFS'
     src.back.constants.SIZE_OF_MAP = [16, 16]
@@ -37,6 +45,8 @@ def retry_the_game():
 
 
 def ProcessingEndMenu():
+    """that function perform end menu"""
+
     end_menu = pygame_menu.Menu('You Won', 600, 300,
                                 theme=pygame_menu.themes.THEME_BLUE)
     end_menu.add.button('Retry', retry_the_game)
@@ -45,6 +55,8 @@ def ProcessingEndMenu():
 
 
 def SetDifficulty():
+    """make difficulty futures alive"""
+
     if src.back.constants.DIFFICULTY == 1:
         src.back.constants.LENGTH_OF_PATHS = 7
     elif src.back.constants.DIFFICULTY == 2:
@@ -56,19 +68,27 @@ def SetDifficulty():
 
 
 def set_difficulty(value, difficult):
+    """functions for set difficulty button in menu"""
+
     src.back.constants.DIFFICULTY = difficult
     SetDifficulty()
 
 
 def set_algorithm(value, num):
+    """functions for set type of algorithm button in menu"""
+
     src.back.constants.ALGO_FOR_GENERATION = value[0][0]
 
 
 def set_size(value, num):
+    """functions for size button in menu"""
+
     src.back.constants.SIZE_OF_MAP = num
 
 
 def SettingsMenu():
+    """that function perform settings menu"""
+
     settings_menu = pygame_menu.Menu('Settings', 600, 300,
                                      theme=pygame_menu.themes.THEME_BLUE)
     settings_menu.add.button('Back', ProcessingStartMenu)
@@ -79,6 +99,8 @@ def SettingsMenu():
 
 
 def InGameMenu():
+    """that function perform in-game menu"""
+
     in_game_menu = pygame_menu.Menu('Menu', 600, 300,
                                     theme=pygame_menu.themes.THEME_BLUE)
     in_game_menu.add.button('Resume', in_game_menu.disable)

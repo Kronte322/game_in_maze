@@ -13,24 +13,32 @@ class MapGenerator:
 
     @staticmethod
     def GenerateMaze(size=(30, 20)):
+        """generate maze as matrix with following size"""
+
         maze = []
-        MapGenerator.FillMatrix(maze, size)
+        MapGenerator.CreateMatrix(maze, size)
         MapGenerator.SetBoardsOfMap(maze)
         MapGenerator.SetPathsOnMap(maze)
         return maze
 
     @staticmethod
     def GetClearMap(size=(30, 20)):
+        """generate empty matrix with following size"""
+
         result = []
-        MapGenerator.FillMatrix(result, size)
+        MapGenerator.CreateMatrix(result, size)
         return result
 
     @staticmethod
     def GetTile(position: tuple, matrix):
+        """return what tile on following position in matrix"""
+
         return matrix[position[0]][position[1]]
 
     @staticmethod
     def GetNeighbours(position: tuple, matrix):
+        """return nearby tiles by cross on following position in matrix"""
+
         result = []
         if position[0] > 0:
             result.append((position[0] - 1, position[1]))
@@ -44,6 +52,8 @@ class MapGenerator:
 
     @staticmethod
     def GetAround(position: tuple, matrix):
+        """return all nearby tiles on following position in matrix"""
+
         result = []
         interm = []
 
@@ -96,12 +106,16 @@ class MapGenerator:
 
     @staticmethod
     def GetLeftAround(position, matrix):
+        """return all nearby tiles on following position without right column"""
+
         around = MapGenerator.GetAround(position, matrix).copy()
         around.pop()
         return around
 
     @staticmethod
     def GetUpAround(position, matrix):
+        """return all nearby tiles on following position bottom row"""
+
         around = MapGenerator.GetAround(position, matrix)
         res = []
         for i in range(len(around)):
@@ -113,6 +127,8 @@ class MapGenerator:
 
     @staticmethod
     def GetRightAround(position, matrix):
+        """return all nearby tiles on following position without left column"""
+
         around = MapGenerator.GetAround(position, matrix)
         res = []
         for i in range(1, len(around)):
@@ -121,6 +137,8 @@ class MapGenerator:
 
     @staticmethod
     def GetDownAround(position, matrix):
+        """return all nearby tiles on following position without top row"""
+
         around = MapGenerator.GetAround(position, matrix)
         res = []
         for i in range(len(around)):
@@ -132,6 +150,8 @@ class MapGenerator:
 
     @staticmethod
     def GetAroundForDFS(position, parent, matrix):
+        """return nearby tiles on following position for dfs algorithm according to parent of the tile"""
+
         if position[0] > parent[0]:
             return MapGenerator.GetLeftAround(parent, matrix)
         if position[0] < parent[0]:
@@ -142,7 +162,9 @@ class MapGenerator:
             return MapGenerator.GetDownAround(parent, matrix)
 
     @staticmethod
-    def FillMatrix(matrix, size):
+    def CreateMatrix(matrix, size):
+        """create matrix with specific size"""
+
         for i in range(size[0]):
             interm = []
             for j in range(size[1]):
@@ -151,6 +173,8 @@ class MapGenerator:
 
     @staticmethod
     def SetBoardsOfMap(matrix):
+        """set boards on matrix like picture frame, for avoiding some troubles with boarders"""
+
         for i in range(len(matrix)):
             matrix[i][0] = CHAR_FOR_BOARD
         for i in range(len(matrix[0])):
@@ -162,6 +186,8 @@ class MapGenerator:
 
     @staticmethod
     def SetPathsOnMap(matrix):
+        """set paths on map using specific algorithm"""
+
         dfs = DFSAlgo()
         prima = PrimaAlgo()
         first_coord = random.randrange(1, src.back.constants.SIZE_OF_MAP[0] - 1)
@@ -180,6 +206,8 @@ class MapGenerator:
 
     @staticmethod
     def ClearMatrix(matrix):
+        """fill matrix with empty tile"""
+
         for i in range(len(matrix)):
             for j in range(len(matrix[0])):
                 matrix[i][j] = CHAR_FOR_EMPTY
@@ -187,19 +215,27 @@ class MapGenerator:
 
 class DFSAlgo:
     def __init__(self):
+        """initialize all that DFS algorithm requires"""
+
         self.used = {}
         self.parents = {}
         self.path = []
 
     def GetPath(self):
+        """return passed during algorithm path"""
+
         return self.path
 
     def Clear(self):
+        """clear variables of member class"""
+
         self.parents.clear()
         self.path.clear()
         self.used.clear()
 
     def DFSForPaths(self, vertex, matrix):
+        """random depth first search for generate random maze on empty matrix"""
+
         sign = False
         for i in MapGenerator.GetAround(vertex, matrix):
             for j in i:
@@ -233,6 +269,8 @@ class DFSAlgo:
                 self.DFSForPaths(i, matrix)
 
     def RecursiveCall(self, vertex, matrix, set_of_tiles, tiles, current_depth, depth):
+        """help function for DFSOnTHeSpecificTIles"""
+
         self.used[vertex] = True
         self.path.append(vertex)
         set_of_tiles.append((vertex, MapGenerator.GetTile(vertex, matrix)))
@@ -245,26 +283,36 @@ class DFSAlgo:
                     self.RecursiveCall(i, matrix, set_of_tiles, tiles, current_depth=current_depth + 1, depth=depth)
 
     def DFSOnTheSpecificTiles(self, vertex, matrix, set_of_tiles, tiles, depth=1000000):
+        """DFs which goes across the following tiles"""
+
         self.Clear()
         self.RecursiveCall(vertex, matrix, set_of_tiles, tiles, current_depth=0, depth=depth)
 
 
 class PrimaAlgo:
     def __init__(self):
+        """initialize all that requires prima algorithm"""
+
         self.opened = {}
         self.closed = {}
         self.parents = {}
         self.path = []
 
     def GetPath(self):
+        """return passed during algorithm path"""
+
         return self.path
 
     def Clear(self):
+        """clear variables of member class"""
+
         self.opened.clear()
         self.closed.clear()
         self.path.clear()
 
     def PrimaForPaths(self, vertex, matrix):
+        """prima algorithm with random choice from open tiles"""
+
         self.opened[vertex] = vertex
         while len(self.opened) != 0:
             current = [0, 0]

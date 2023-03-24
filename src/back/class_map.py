@@ -24,18 +24,24 @@ generated_floor = {}
 
 
 def SetImage(path, number):
+    """that function gives unpacked image"""
+
     result = pygame.image.load(path + str(number) + ".png")
     result = pygame.transform.scale(result, (SIZE_OF_TILE, SIZE_OF_TILE))
     return result
 
 
 def SetTiles():
+    """that function set all sprites of the game"""
+
     for i in range(1, NUM_OF_PNGS_FOR_FLOOR + 1):
         list_with_floor.append(SetImage(PATH_TO_FLOOR_PNG, i))
 
 
 class Map:
     def __init__(self):
+        """initialize map"""
+
         SetTiles()
 
         if src.back.constants.DIFFICULTY == 5:
@@ -58,9 +64,11 @@ class Map:
 
         self.dfs = DFSAlgo()
 
-        self.SetTilesOnMatrix(self.mappa, self.matrix_with_map, (0, 0))
+        self.SetTilesOnMap(self.mappa, self.matrix_with_map, (0, 0))
 
     def BlitSpecificMap(self, list_with_map):
+        """blit specific matrix with tiles on the current map"""
+
         left_upper_corner = (
             min(list_with_map, key=lambda item: item[0][0])[0][0],
             min(list_with_map, key=lambda item: item[0][1])[0][1])
@@ -79,11 +87,13 @@ class Map:
 
         for i in list_with_map:
             matrix_with_map[i[0][0] - left_upper_corner[0]][i[0][1] - left_upper_corner[1]] = i[1]
-        self.SetTilesOnMatrix(self.current_room, matrix_with_map, left_upper_corner)
+        self.SetTilesOnMap(self.current_room, matrix_with_map, left_upper_corner)
         return left_upper_corner
 
     @staticmethod
-    def SetTilesOnMatrix(surface, matrix, left_corner):
+    def SetTilesOnMap(surface, matrix, left_corner):
+        """blit map according to the matrix and position of left corner relative to left corner of the main matrix"""
+
         x, y = 0, 0
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
@@ -103,11 +113,15 @@ class Map:
 
     @staticmethod
     def SetSpecificOnMatrix(matrix, list_of_tiles):
+        """set tiles on matrix according to following list"""
+
         for i in list_of_tiles:
             matrix[i[0][0]][i[0][1]] = i[1]
 
     @staticmethod
     def BlitSpecificOnMap(surface, list_of_tiles):
+        """blit tiles on map according to following list"""
+
         for i in list_of_tiles:
             x = SIZE_OF_TILE * i[0][0]
             y = SIZE_OF_TILE * i[0][1]
@@ -125,17 +139,25 @@ class Map:
                 surface.blit(image_for_empty, (x, y))
 
     def GetTile(self, position):
+        """that function gives tile on the position of tile according to given x, y coordinates"""
+
         return self.matrix_with_map[position[0] // SIZE_OF_TILE][position[1] // SIZE_OF_TILE]
 
     @staticmethod
     def GetPositionOfTile(position):
+        """that function gives position of tile according to given x, y coordinates"""
+
         return position[0] // SIZE_OF_TILE, position[1] // SIZE_OF_TILE
 
     def CanStandThere(self, position):
+        """that function give info about possibility of standing on given position"""
+
         tile = self.GetTile((position[0] - self.global_map_position[0], position[1] - self.global_map_position[1]))
         return tile in [CHAR_FOR_PATH, CHAR_FOR_EXIT]
 
     def SetCurrentRoom(self, player_position, flag=False):
+        """that function updates current map according to the given position"""
+
         if not flag:
             player_position = [player_position[0] - self.global_map_position[0],
                                player_position[1] - self.global_map_position[1]]
@@ -162,19 +184,23 @@ class Map:
             self.BlitSpecificOnMap(self.visited_mappa, current_room)
 
     def Render(self, display):
-        # display.blit(self.mappa, self.global_map_position)
-        # print(src.back.constants.DIFFICULTY)
+        """that function blit map on the display"""
+
         display.blit(self.current_room, self.current_room_position)
         if src.back.constants.DIFFICULTY < 3:
             display.blit(pygame.transform.scale(self.visited_mappa, SIZE_OF_MINIMAP), POSITION_OF_MINIMAP)
 
-    def MoveMap(self, position):
-        self.global_map_position[0] += position[0]
-        self.global_map_position[1] += position[1]
-        self.current_room_position[0] += position[0]
-        self.current_room_position[1] += position[1]
+    def MoveMap(self, vector_of_movement):
+        """this function moves map according to movement vector"""
+
+        self.global_map_position[0] += vector_of_movement[0]
+        self.global_map_position[1] += vector_of_movement[1]
+        self.current_room_position[0] += vector_of_movement[0]
+        self.current_room_position[1] += vector_of_movement[1]
 
     def SpawnPosition(self):
+        """that function sets spawn position and start map"""
+
         while True:
             x_coord_spawn = 0
             y_coord_spawn = 0
