@@ -244,6 +244,6 @@ class Map:
 
     def ShowAnswer(self):
         """this method puts answer on the mini-map"""
-
+        src.back.constants.DIFFICULTY = 1
         # self.SetSpecificOnMatrix(self.matrix_with_map, self.answer)
         self.BlitSpecificOnMap(self.visited_mappa, self.answer)

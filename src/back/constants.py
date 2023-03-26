@@ -29,7 +29,7 @@ SPEED_OF_CHARACTER = 7
 SPAWN_POSITION = [SIZE_OF_DISPLAY[0] // 2, SIZE_OF_DISPLAY[1] // 2]
 
 # path to pngs
-PATH_TO_CHARACTER_PNG = "../tile_sets/tiles_for_chars/sprite_0.png"
+PATH_TO_CHARACTER_PNG = "../tile_sets/tiles_for_chars/"
 PATH_TO_FLOOR_PNG = "../tile_sets/tiles_for_map/floor/sprite_"
 PATH_TO_EMPTY_TILE_PNG = "../tile_sets/tiles_for_map/back_ground/sprite_078.png"
 PATH_TO_EXIT_PNG = "../tile_sets/tiles_for_map/exit/sprite_038.png"
@@ -48,12 +48,15 @@ NUM_OF_PNGS_FOR_FLOOR = 14
 # preferences for menus
 SET_WITH_DIFFICULTIES = [('I’m Too Young to Die', 1), ('Hurt Me Plenty', 2), ('Ultra Violence', 3), ('Nightmare', 4),
                          ('Just A Psycho', 5)]
-SET_WITH_ALGOS = [('DFS', 1), ('Prima', 2)]
+SET_WITH_ALGOS = [('DFS', 'DFS'), ('Prima', 'Prima')]
 SET_WITH_SIZES = [('Tiny [16, 16]', [16, 16]), ('Classic [32, 32]', [32, 32]), ('Large [64, 64]', [64, 64]),
                   ('Huge [128, 128]', [128, 128])]
+SET_WITH_CHARACTERS = [('Necromancer', 'necromancer'), ('Knight', 'knight'), ('Priest', 'priest'),
+                       ('Skeleton', 'skeleton'), ('Spirit', 'spirit')]
 
 # cases
 DIFFICULTY = 1
+CHARACTER = 'necromancer'
 ALGO_FOR_GENERATION = 'DFS'
 
 # places for in-game ui

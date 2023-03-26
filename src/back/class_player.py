@@ -1,5 +1,5 @@
 """File contains player class"""
-
+import src.back.constants
 from src.back.constants import *
 import pygame
 
@@ -22,7 +22,7 @@ class Player:
         self.image = pygame.Surface(
             (SIZE_OF_CHARACTER, SIZE_OF_CHARACTER), flags=pygame.SRCALPHA)
         self.image.fill((0, 0, 0, 0))
-        self.image_of_character = pygame.image.load(PATH_TO_CHARACTER_PNG)
+        self.image_of_character = pygame.image.load(PATH_TO_CHARACTER_PNG + src.back.constants.CHARACTER + '.png')
         self.image_of_character = pygame.transform.scale(
             self.image_of_character, (SIZE_OF_CHARACTER, SIZE_OF_CHARACTER))
 

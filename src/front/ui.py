@@ -28,8 +28,8 @@ def ProcessingStartMenu():
 
     start_menu = pygame_menu.Menu('Welcome', 400, 300,
                                   theme=pygame_menu.themes.THEME_BLUE)
-
     start_menu.add.button('Play', start_the_game)
+    start_menu.add.selector('Character:', SET_WITH_CHARACTERS, onchange=set_character)
     start_menu.add.button('Settings', SettingsMenu)
     start_menu.add.button('Quit', pygame_menu.events.EXIT)
     start_menu.mainloop(display)
@@ -67,23 +67,29 @@ def SetDifficulty():
         src.back.constants.LENGTH_OF_PATHS = 1
 
 
-def set_difficulty(value, difficult):
+def set_difficulty(key, value):
     """functions for set difficulty button in menu"""
 
-    src.back.constants.DIFFICULTY = difficult
+    src.back.constants.DIFFICULTY = value
     SetDifficulty()
 
 
-def set_algorithm(value, num):
+def set_algorithm(key, value):
     """functions for set type of algorithm button in menu"""
 
-    src.back.constants.ALGO_FOR_GENERATION = value[0][0]
+    src.back.constants.ALGO_FOR_GENERATION = value
 
 
-def set_size(value, num):
+def set_size(key, value):
     """functions for size button in menu"""
 
-    src.back.constants.SIZE_OF_MAP = num
+    src.back.constants.SIZE_OF_MAP = value
+
+
+def set_character(key, value):
+    """function for character selection"""
+
+    src.back.constants.CHARACTER = value
 
 
 def SettingsMenu():
@@ -107,4 +113,3 @@ def InGameMenu():
     in_game_menu.add.button('Retry', retry_the_game)
     in_game_menu.add.button('Quit', pygame_menu.events.EXIT)
     in_game_menu.mainloop(display)
-
