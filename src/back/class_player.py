@@ -5,6 +5,8 @@ import pygame
 
 
 class Player:
+    """class for an entity that is controlled by the player"""
+
     def __init__(self):
         """initialize player"""
 
@@ -27,11 +29,13 @@ class Player:
         self.image.blit(self.image_of_character, (0, 0))
 
     def GetPosition(self):
-        """that function gives position of player on the screen"""
+        """this function gives position of player on the screen"""
 
         return [self.hit_box.x + SIZE_OF_CHARACTER // 2, self.hit_box.y + SIZE_OF_CHARACTER]
 
     def move(self, mappa):
+        """this function process moves of the player"""
+
         key = pygame.key.get_pressed()
         if key[pygame.K_w]:
             if mappa.CanStandThere(

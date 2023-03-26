@@ -10,7 +10,7 @@ from src.back import class_player
 
 
 def ProcessingLoop(screen, resume=False):
-    """that function performs main game loop"""
+    """this function performs main game loop"""
 
     sys.setrecursionlimit(DEEP_OF_RECURSION)
 
@@ -29,7 +29,7 @@ def ProcessingLoop(screen, resume=False):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            ui.ProcessEvents(event)
+            ui.ProcessEvents(event, mappa)
 
         player.move(mappa)
 

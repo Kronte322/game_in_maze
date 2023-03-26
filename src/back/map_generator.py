@@ -4,12 +4,14 @@ import random
 from src.back.constants import *
 import src.back.constants
 import time
+from collections import deque
 
 random.seed(time.time())
 # random.seed(12)
 
 
 class MapGenerator:
+    """this class make able to generate maze and make able to operate with it"""
 
     @staticmethod
     def GenerateMaze(size=(30, 20)):
@@ -214,6 +216,8 @@ class MapGenerator:
 
 
 class DFSAlgo:
+    """this class represents deep first search algorithm"""
+
     def __init__(self):
         """initialize all that DFS algorithm requires"""
 
@@ -290,6 +294,8 @@ class DFSAlgo:
 
 
 class PrimaAlgo:
+    """this class represents prima algorithm"""
+
     def __init__(self):
         """initialize all that requires prima algorithm"""
 
@@ -348,3 +354,42 @@ class PrimaAlgo:
                 if i not in self.closed and MapGenerator.GetTile(i, matrix) not in [CHAR_FOR_BOARD]:
                     self.opened[i] = i
                     self.parents[i] = current
+
+
+class BFSAlgo:
+    """this class represents best first search algorithm"""
+
+    def __init__(self):
+        """initialize all that bfs algorithm requires"""
+
+        self.deque = deque()
+        self.closed = {}
+        self.parents = {}
+        self.path = []
+
+    def BFSForFindShortestPath(self, vertex, matrix):
+        """this method perform a search the shortest path that complete maze using bfs algorithm"""
+
+        self.deque.appendleft(vertex)
+        current = vertex
+        self.parents[current] = current
+        while len(self.deque) != 0:
+            current = self.deque.pop()
+            self.closed[current] = True
+            if MapGenerator.GetTile(current, matrix) in [CHAR_FOR_EXIT]:
+                break
+            for i in MapGenerator.GetNeighbours(current, matrix):
+                if MapGenerator.GetTile(i, matrix) in [CHAR_FOR_PATH, CHAR_FOR_EXIT]:
+                    if i not in self.closed:
+                        self.parents[i] = current
+                        self.deque.appendleft(i)
+
+        while current != self.parents[current]:
+            self.path.append([current, CHAR_FOR_ANSWER])
+            current = self.parents[current]
+        self.path.append([current, CHAR_FOR_ANSWER])
+
+    def GetPath(self):
+        """this method returns path that bfs algorithm has traveled"""
+
+        return self.path

@@ -24,7 +24,7 @@ generated_floor = {}
 
 
 def SetImage(path, number):
-    """that function gives unpacked image"""
+    """this function gives unpacked image"""
 
     result = pygame.image.load(path + str(number) + ".png")
     result = pygame.transform.scale(result, (SIZE_OF_TILE, SIZE_OF_TILE))
@@ -32,7 +32,7 @@ def SetImage(path, number):
 
 
 def SetTiles():
-    """that function set all sprites of the game"""
+    """this function set all sprites of the game"""
 
     for i in range(1, NUM_OF_PNGS_FOR_FLOOR + 1):
         list_with_floor.append(SetImage(PATH_TO_FLOOR_PNG, i))
@@ -63,6 +63,9 @@ class Map:
         self.current_room_position = [0, 0]
 
         self.dfs = DFSAlgo()
+        self.bfs = BFSAlgo()
+
+        self.answer = []
 
         self.SetTilesOnMap(self.mappa, self.matrix_with_map, (0, 0))
 
@@ -105,6 +108,8 @@ class Map:
                         surface.blit(generated_floor[(i + left_corner[0], j + left_corner[1])], (x, y))
                 elif matrix[i][j] in [CHAR_FOR_EXIT]:
                     surface.blit(image_for_exit, (x, y))
+                elif matrix[i][j] in [CHAR_FOR_ANSWER]:
+                    pygame.draw.rect(surface, color=COLOR_FOR_ANSWER_TILES, rect=[x, y, SIZE_OF_TILE, SIZE_OF_TILE])
                 else:
                     surface.blit(image_for_empty, (x, y))
                 y += SIZE_OF_TILE
@@ -135,28 +140,30 @@ class Map:
                 pygame.draw.rect(surface, color=COLOR_FOR_CURRENT_POSITION, rect=[x, y, SIZE_OF_TILE, SIZE_OF_TILE])
             elif i[1] in [CHAR_FOR_EXIT]:
                 surface.blit(image_for_exit, (x, y))
+            elif i[1] in [CHAR_FOR_ANSWER]:
+                pygame.draw.rect(surface, color=COLOR_FOR_ANSWER_TILES, rect=[x, y, SIZE_OF_TILE, SIZE_OF_TILE])
             else:
                 surface.blit(image_for_empty, (x, y))
 
     def GetTile(self, position):
-        """that function gives tile on the position of tile according to given x, y coordinates"""
+        """this function gives tile on the position of tile according to given x, y coordinates"""
 
         return self.matrix_with_map[position[0] // SIZE_OF_TILE][position[1] // SIZE_OF_TILE]
 
     @staticmethod
     def GetPositionOfTile(position):
-        """that function gives position of tile according to given x, y coordinates"""
+        """this function gives position of tile according to given x, y coordinates"""
 
         return position[0] // SIZE_OF_TILE, position[1] // SIZE_OF_TILE
 
     def CanStandThere(self, position):
-        """that function give info about possibility of standing on given position"""
+        """this function give info about possibility of standing on given position"""
 
         tile = self.GetTile((position[0] - self.global_map_position[0], position[1] - self.global_map_position[1]))
         return tile in [CHAR_FOR_PATH, CHAR_FOR_EXIT]
 
     def SetCurrentRoom(self, player_position, flag=False):
-        """that function updates current map according to the given position"""
+        """this function updates current map according to the given position"""
 
         if not flag:
             player_position = [player_position[0] - self.global_map_position[0],
@@ -184,7 +191,7 @@ class Map:
             self.BlitSpecificOnMap(self.visited_mappa, current_room)
 
     def Render(self, display):
-        """that function blit map on the display"""
+        """this function blit map on the display"""
 
         display.blit(self.current_room, self.current_room_position)
         if src.back.constants.DIFFICULTY < 3:
@@ -199,7 +206,7 @@ class Map:
         self.current_room_position[1] += vector_of_movement[1]
 
     def SpawnPosition(self):
-        """that function sets spawn position and start map"""
+        """this function sets spawn position and start map"""
 
         while True:
             x_coord_spawn = 0
@@ -227,8 +234,16 @@ class Map:
                 if sign:
                     break
             self.matrix_with_map[x_coord_end][y_coord_end] = CHAR_FOR_EXIT
+            self.bfs.BFSForFindShortestPath((x_coord_spawn, y_coord_spawn), self.matrix_with_map)
+            self.answer = self.bfs.GetPath()
 
             self.global_map_position = [-x_coord_spawn * SIZE_OF_TILE + SPAWN_POSITION[0],
                                         -y_coord_spawn * SIZE_OF_TILE + SPAWN_POSITION[1]]
             self.SetCurrentRoom((x_coord_spawn * SIZE_OF_TILE, y_coord_spawn * SIZE_OF_TILE), flag=True)
             return None
+
+    def ShowAnswer(self):
+        """this method puts answer on the mini-map"""
+
+        # self.SetSpecificOnMatrix(self.matrix_with_map, self.answer)
+        self.BlitSpecificOnMap(self.visited_mappa, self.answer)

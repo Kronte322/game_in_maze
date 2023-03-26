@@ -24,7 +24,7 @@ def start_the_game():
 
 
 def ProcessingStartMenu():
-    """that function perform start menu"""
+    """this function perform start menu"""
 
     start_menu = pygame_menu.Menu('Welcome', 400, 300,
                                   theme=pygame_menu.themes.THEME_BLUE)
@@ -45,7 +45,7 @@ def retry_the_game():
 
 
 def ProcessingEndMenu():
-    """that function perform end menu"""
+    """this function perform end menu"""
 
     end_menu = pygame_menu.Menu('You Won', 600, 300,
                                 theme=pygame_menu.themes.THEME_BLUE)
@@ -87,7 +87,7 @@ def set_size(value, num):
 
 
 def SettingsMenu():
-    """that function perform settings menu"""
+    """this function perform settings menu"""
 
     settings_menu = pygame_menu.Menu('Settings', 600, 300,
                                      theme=pygame_menu.themes.THEME_BLUE)
@@ -99,7 +99,7 @@ def SettingsMenu():
 
 
 def InGameMenu():
-    """that function perform in-game menu"""
+    """this function perform in-game menu"""
 
     in_game_menu = pygame_menu.Menu('Menu', 600, 300,
                                     theme=pygame_menu.themes.THEME_BLUE)
