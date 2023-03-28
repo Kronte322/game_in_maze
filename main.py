@@ -1,5 +1,5 @@
 """File contains execute"""
 
-from src.front.ui import StartTheGame
+from src.front.game import Game
 
-StartTheGame()
+game = Game()

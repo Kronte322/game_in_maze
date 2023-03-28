@@ -8,15 +8,6 @@ import src.front.main_loop
 
 display = pygame.display.set_mode((SIZE_OF_DISPLAY[0], SIZE_OF_DISPLAY[1]))
 
-
-def StartTheGame():
-    """function that performs start of the game"""
-
-    pygame.init()
-    pygame.display.set_caption('Maze Enjoyer')
-    ProcessingStartMenu()
-
-
 def start_the_game():
     """function for start game button in menu"""
 

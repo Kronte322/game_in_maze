@@ -57,52 +57,52 @@ class MapGenerator:
         """return all nearby tiles on following position in matrix"""
 
         result = []
-        interm = []
+        intermediate = []
 
         if position[0] > 0 and position[1] > 0:
-            interm.append((position[0] - 1, position[1] - 1))
+            intermediate.append((position[0] - 1, position[1] - 1))
         else:
-            interm.append((-1, -1))
+            intermediate.append((-1, -1))
         if position[0] > 0:
-            interm.append((position[0] - 1, position[1]))
+            intermediate.append((position[0] - 1, position[1]))
         else:
-            interm.append((-1, -1))
+            intermediate.append((-1, -1))
         if position[0] > 0 and position[1] < len(matrix[0]) - 1:
-            interm.append((position[0] - 1, position[1] + 1))
+            intermediate.append((position[0] - 1, position[1] + 1))
         else:
-            interm.append((-1, -1))
-        result.append(interm.copy())
+            intermediate.append((-1, -1))
+        result.append(intermediate.copy())
 
-        interm.clear()
+        intermediate.clear()
 
         if position[1] > 0:
-            interm.append((position[0], position[1] - 1))
+            intermediate.append((position[0], position[1] - 1))
         else:
-            interm.append((-1, -1))
-        interm.append((position[0], position[1]))
+            intermediate.append((-1, -1))
+        intermediate.append((position[0], position[1]))
         if position[1] < len(matrix[0]) - 1:
-            interm.append((position[0], position[1] + 1))
+            intermediate.append((position[0], position[1] + 1))
         else:
-            interm.append((-1, -1))
-        result.append(interm.copy())
+            intermediate.append((-1, -1))
+        result.append(intermediate.copy())
 
-        interm.clear()
+        intermediate.clear()
 
         if position[0] < len(matrix) - 1 and position[1] > 0:
-            interm.append((position[0] + 1, position[1] - 1))
+            intermediate.append((position[0] + 1, position[1] - 1))
         else:
-            interm.append((-1, -1))
+            intermediate.append((-1, -1))
         if position[0] < len(matrix) - 1:
-            interm.append((position[0] + 1, position[1]))
+            intermediate.append((position[0] + 1, position[1]))
         else:
-            interm.append((-1, -1))
+            intermediate.append((-1, -1))
         if position[0] < len(matrix) - 1 and position[1] < len(matrix[0]) - 1:
-            interm.append((position[0] + 1, position[1] + 1))
+            intermediate.append((position[0] + 1, position[1] + 1))
         else:
-            interm.append((-1, -1))
-        result.append(interm.copy())
+            intermediate.append((-1, -1))
+        result.append(intermediate.copy())
 
-        interm.clear()
+        intermediate.clear()
 
         return result
 

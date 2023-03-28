@@ -29,10 +29,10 @@ SPEED_OF_CHARACTER = 7
 SPAWN_POSITION = [SIZE_OF_DISPLAY[0] // 2, SIZE_OF_DISPLAY[1] // 2]
 
 # path to pngs
-PATH_TO_CHARACTER_PNG = "src/tile_sets/tiles_for_chars/"
-PATH_TO_FLOOR_PNG = "src/tile_sets/tiles_for_map/floor/sprite_"
-PATH_TO_EMPTY_TILE_PNG = "src/tile_sets/tiles_for_map/back_ground/sprite_078.png"
-PATH_TO_EXIT_PNG = "src/tile_sets/tiles_for_map/exit/sprite_038.png"
+PATH_TO_CHARACTER_PNG = "images/tiles_for_chars/"
+PATH_TO_FLOOR_PNG = "images/tiles_for_map/floor/sprite_"
+PATH_TO_EMPTY_TILE_PNG = "images/tiles_for_map/back_ground/sprite_078.png"
+PATH_TO_EXIT_PNG = "images/tiles_for_map/exit/sprite_038.png"
 
 # specific colors
 COLOR_FOR_BACKGROUND = (37, 19, 26)

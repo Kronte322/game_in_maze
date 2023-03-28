@@ -31,14 +31,14 @@ def ProcessingLoop(screen, resume=False):
                 running = False
             ui.ProcessEvents(event, mappa)
 
-        player.move(mappa)
+        player.Move(mappa)
 
         screen.fill(COLOR_FOR_BACKGROUND)
 
         mappa.SetCurrentRoom(player.GetPosition())
         mappa.Render(screen)
 
-        player.render(screen)
+        player.Render(screen)
 
         ui.Blit(time_delta, screen=screen)
 
