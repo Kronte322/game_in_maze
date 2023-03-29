@@ -2,105 +2,185 @@
 
 import pygame
 import pygame_menu
+import pickle
 from src.back.constants import *
 import src.back.constants
 import src.front.main_loop
+import os
+from src.back.PackObjects import MapForPack, PlayerForPack
 
 display = pygame.display.set_mode((SIZE_OF_DISPLAY[0], SIZE_OF_DISPLAY[1]))
 
-def start_the_game():
-    """function for start game button in menu"""
 
-    src.front.main_loop.ProcessingLoop(display)
+class MenuUI:
+    """class that contains all menus UI"""
 
+    name_of_save = DEFAULT_NAME_FOR_SAVE
+    name_of_load = None
+    if len(os.listdir(PATH_TO_SAVED_MAZES)) != 0:
+        name_of_load = os.listdir(PATH_TO_SAVED_MAZES)[0]
 
-def ProcessingStartMenu():
-    """this function perform start menu"""
+    list_with_saves = [(name, name) for name in os.listdir(PATH_TO_SAVED_MAZES)]
 
-    start_menu = pygame_menu.Menu('Welcome', 400, 300,
-                                  theme=pygame_menu.themes.THEME_BLUE)
-    start_menu.add.button('Play', start_the_game)
-    start_menu.add.selector('Character:', SET_WITH_CHARACTERS, onchange=set_character)
-    start_menu.add.button('Settings', SettingsMenu)
-    start_menu.add.button('Quit', pygame_menu.events.EXIT)
-    start_menu.mainloop(display)
+    @staticmethod
+    def SetDifficultyFromMenu(key, value):
+        """functions for set difficulty button in menu"""
 
+        src.back.constants.DIFFICULTY = value
+        MenuUI.SetDifficulty()
 
-def retry_the_game():
-    """function for retry game button in menu"""
+    @staticmethod
+    def StartTheGame():
+        """function for start game button in menu"""
 
-    src.back.constants.DIFFICULTY = 1
-    src.back.constants.ALGO_FOR_GENERATION = 'DFS'
-    src.back.constants.SIZE_OF_MAP = [16, 16]
-    ProcessingStartMenu()
+        src.back.constants.STATE = IN_GAME_STATE
+        src.front.main_loop.ProcessingLoop(display)
 
+    @staticmethod
+    def SetDifficulty():
+        """make difficulty futures alive"""
 
-def ProcessingEndMenu():
-    """this function perform end menu"""
+        src.back.constants.LENGTH_OF_PATHS = LENGTHS_PATHS_ACCORDING_TO_DIFFICULTY[src.back.constants.DIFFICULTY]
 
-    end_menu = pygame_menu.Menu('You Won', 600, 300,
-                                theme=pygame_menu.themes.THEME_BLUE)
-    end_menu.add.button('Retry', retry_the_game)
-    end_menu.add.button('Quit', pygame_menu.events.EXIT)
-    end_menu.mainloop(display)
+    @staticmethod
+    def RetryTheGame():
+        """function for retry game button in menu"""
 
+        src.back.constants.MAPPA = MAPPA
+        src.back.constants.PLAYER = PLAYER
+        src.back.constants.CHARACTER = CHARACTER
+        src.back.constants.DIFFICULTY = DIFFICULTY
+        src.back.constants.ALGO_FOR_GENERATION = DFS
+        src.back.constants.SIZE_OF_MAP = SIZE_OF_MAP
+        src.back.constants.STATE = START_MENU_STATE
+        MenuUI.ProcessingStartMenu()
 
-def SetDifficulty():
-    """make difficulty futures alive"""
+    @staticmethod
+    def SetAlgorithm(key, value):
+        """functions for set type of algorithm button in menu"""
 
-    if src.back.constants.DIFFICULTY == 1:
-        src.back.constants.LENGTH_OF_PATHS = 7
-    elif src.back.constants.DIFFICULTY == 2:
-        src.back.constants.LENGTH_OF_PATHS = 4
-    elif src.back.constants.DIFFICULTY == 3:
-        src.back.constants.LENGTH_OF_PATHS = 4
-    elif src.back.constants.DIFFICULTY in [4, 5]:
-        src.back.constants.LENGTH_OF_PATHS = 1
+        src.back.constants.ALGO_FOR_GENERATION = value
 
+    @staticmethod
+    def SetSize(key, value):
+        """functions for size button in menu"""
 
-def set_difficulty(key, value):
-    """functions for set difficulty button in menu"""
+        src.back.constants.SIZE_OF_MAP = value
 
-    src.back.constants.DIFFICULTY = value
-    SetDifficulty()
+    @staticmethod
+    def SetCharacter(key, value):
+        """function for character selection"""
 
+        src.back.constants.CHARACTER = value
 
-def set_algorithm(key, value):
-    """functions for set type of algorithm button in menu"""
+    @staticmethod
+    def ProcessingStartMenu():
+        """this function perform start menu"""
+        src.back.constants.STATE = START_MENU_STATE
+        start_menu = pygame_menu.Menu(WELCOME_CONDITION_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
+                                      theme=pygame_menu.themes.THEME_BLUE)
+        start_menu.add.button(PLAY_CONDITION_STRING, MenuUI.StartTheGame)
+        start_menu.add.selector(CHARACTER_SELECTION_STRING, SET_WITH_CHARACTERS, onchange=MenuUI.SetCharacter)
+        start_menu.add.button(LOAD_STRING, MenuUI.ProcessingLoadMenu)
+        start_menu.add.button(SETTINGS_CONDITION_STRING, MenuUI.SettingsMenu)
+        start_menu.add.button(QUIT_CONDITION_STRING, pygame_menu.events.EXIT)
 
-    src.back.constants.ALGO_FOR_GENERATION = value
+        start_menu.mainloop(display)
 
+    @staticmethod
+    def SetNameOfLoad(key, value):
+        """this function set name of loading file"""
 
-def set_size(key, value):
-    """functions for size button in menu"""
+        MenuUI.name_of_load = value
 
-    src.back.constants.SIZE_OF_MAP = value
+    @staticmethod
+    def ProcessingLoadMenu():
+        """this function performs load menu"""
 
-
-def set_character(key, value):
-    """function for character selection"""
-
-    src.back.constants.CHARACTER = value
-
-
-def SettingsMenu():
-    """this function perform settings menu"""
-
-    settings_menu = pygame_menu.Menu('Settings', 600, 300,
+        load_menu = pygame_menu.Menu(LOAD_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
                                      theme=pygame_menu.themes.THEME_BLUE)
-    settings_menu.add.button('Back', ProcessingStartMenu)
-    settings_menu.add.selector('Difficulty:', SET_WITH_DIFFICULTIES, onchange=set_difficulty)
-    settings_menu.add.selector('Size:', SET_WITH_SIZES, onchange=set_size)
-    settings_menu.add.selector('Algorithm for generator:', SET_WITH_ALGOS, onchange=set_algorithm)
-    settings_menu.mainloop(display)
 
+        def LoadFile():
+            """this function load saved session"""
 
-def InGameMenu():
-    """this function perform in-game menu"""
+            with open(PATH_TO_SAVED_MAZES + MenuUI.name_of_load, 'rb') as file:
+                src.back.constants.MAPPA = pickle.load(file).UnPack()
+                src.back.constants.PLAYER = pickle.load(file).UnPack()
+                first_test = src.back.constants.MAPPA
+                second_test = src.back.constants.PLAYER
+            load_menu.disable()
 
-    in_game_menu = pygame_menu.Menu('Menu', 600, 300,
+        load_menu.add.button(BACK_CONDITION_STRING, load_menu.disable)
+        load_menu.add.selector(CHOOSE_FILE_STRING, MenuUI.list_with_saves, onchange=MenuUI.SetNameOfLoad)
+        load_menu.add.button(LOAD_STRING, LoadFile)
+        load_menu.mainloop(display)
+
+    @staticmethod
+    def ProcessingEndMenu():
+        """this function perform end menu"""
+
+        src.back.constants.STATE = END_GAME_MENU_STATE
+        end_menu = pygame_menu.Menu(WIN_CONDITION_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
                                     theme=pygame_menu.themes.THEME_BLUE)
-    in_game_menu.add.button('Resume', in_game_menu.disable)
-    in_game_menu.add.button('Retry', retry_the_game)
-    in_game_menu.add.button('Quit', pygame_menu.events.EXIT)
-    in_game_menu.mainloop(display)
+        end_menu.add.button(RETRY_CONDITION_STRING, MenuUI.RetryTheGame)
+        end_menu.add.button(QUIT_CONDITION_STRING, pygame_menu.events.EXIT)
+        end_menu.mainloop(display)
+
+    @staticmethod
+    def SettingsMenu():
+        """this function perform settings menu"""
+
+        settings_menu = pygame_menu.Menu(SETTINGS_CONDITION_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
+                                         theme=pygame_menu.themes.THEME_BLUE)
+        settings_menu.add.button(BACK_CONDITION_STRING, MenuUI.ProcessingStartMenu)
+        settings_menu.add.selector(DIFFICULTY_SELECTION_STRING, SET_WITH_DIFFICULTIES,
+                                   onchange=MenuUI.SetDifficultyFromMenu)
+        settings_menu.add.selector(SIZE_SELECTION_STRING, SET_WITH_SIZES, onchange=MenuUI.SetSize)
+        settings_menu.add.selector(ALGORITHM_CONDITION_STRING, SET_WITH_ALGOS, onchange=MenuUI.SetAlgorithm)
+        settings_menu.mainloop(display)
+
+    @staticmethod
+    def InGameMenu():
+        """this function perform in-game menu"""
+
+        src.back.constants.STATE = IN_GAME_MENU_STATE
+
+        in_game_menu = pygame_menu.Menu(MENU_CONDITION_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
+                                        theme=pygame_menu.themes.THEME_BLUE)
+
+        def MyDisable():
+            src.back.constants.STATE = IN_GAME_STATE
+            in_game_menu.disable()
+
+        in_game_menu.add.button(RESUME_CONDITION_STRING, MyDisable)
+        in_game_menu.add.button(SAVE_MAZE_STRING, MenuUI.SaveMazeMenu)
+        in_game_menu.add.button(RETRY_CONDITION_STRING, MenuUI.RetryTheGame)
+        in_game_menu.add.button(QUIT_CONDITION_STRING, pygame_menu.events.EXIT)
+        in_game_menu.mainloop(display)
+
+    @staticmethod
+    def SetNameOfSave(string):
+        """this function set name of save"""
+
+        MenuUI.name_of_save = string
+
+    @staticmethod
+    def SaveMazeMenu():
+        """this function performs save menu"""
+
+        save_menu = pygame_menu.Menu(SAVE_MAZE_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
+                                     theme=pygame_menu.themes.THEME_BLUE)
+
+        def SaveFile():
+            """this function save session into file"""
+
+            with open(PATH_TO_SAVED_MAZES + MenuUI.name_of_save, 'wb') as file:
+                pickle.dump(MapForPack(src.back.constants.MAPPA), file, protocol=pickle.HIGHEST_PROTOCOL)
+                pickle.dump(PlayerForPack(src.back.constants.PLAYER), file, protocol=pickle.HIGHEST_PROTOCOL)
+            save_menu.disable()
+
+        save_menu.add.button(BACK_CONDITION_STRING, save_menu.disable)
+        save_menu.add.text_input(NAME_MAZE_STRING, maxwidth=MAX_SIZE_OF_NAME_OF_FILE, default=MenuUI.name_of_save,
+                                 onchange=MenuUI.SetNameOfSave)
+        save_menu.add.button(SAVE_MAZE_STRING, SaveFile)
+        save_menu.mainloop(display)

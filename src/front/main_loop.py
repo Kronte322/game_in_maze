@@ -2,36 +2,47 @@
 
 import sys
 import pygame
-import pygame_gui
+import src.back.constants
 from src.back.in_game_ui import Ui
 from src.back.constants import *
 from src.back import class_map
 from src.back import class_player
+from src.back.event_distributor import EventDistributor
 
 
-def ProcessingLoop(screen, resume=False):
+def ProcessingLoop(screen):
     """this function performs main game loop"""
 
+    # over 30 row but its main loop ().()
     sys.setrecursionlimit(DEEP_OF_RECURSION)
 
-    mappa = class_map.Map()
-    player = class_player.Player()
+    if src.back.constants.DIFFICULTY == 5:
+        src.back.constants.SIZE_OF_MAP = SET_WITH_SIZES[3][1]
+
+    mappa = None
+    player = None
+
+    if src.back.constants.MAPPA is None:
+        mappa = class_map.Map()
+        player = class_player.Player()
+        mappa.SpawnPosition()
+        src.back.constants.MAPPA = mappa
+        src.back.constants.PLAYER = player
+
+    else:
+        mappa = src.back.constants.MAPPA
+        player = src.back.constants.PLAYER
+
+    ui = Ui()
+    event_distributor = EventDistributor(player, mappa, ui)
 
     clock = pygame.time.Clock()
 
-    mappa.SpawnPosition()
-
-    ui = Ui()
-
-    running = True
-    while running:
+    while src.back.constants.RUNNING:
         time_delta = clock.tick(FRAMES_PER_SEC)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            ui.ProcessEvents(event, mappa)
 
-        player.Move(mappa)
+        event_distributor.ProcessEvents()
+        event_distributor.ProcessKeys()
 
         screen.fill(COLOR_FOR_BACKGROUND)
 

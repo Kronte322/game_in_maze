@@ -1,3 +1,5 @@
+"""File contains in-game UI class"""
+
 import pygame
 import pygame_gui
 import src.front.ui
@@ -9,25 +11,22 @@ class Ui:
         """initialize in-game user interface"""
 
         self.manager = pygame_gui.UIManager(SIZE_OF_DISPLAY)
-        self.settings_button = pygame_gui.elements.UIButton(
+        self.menu_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(PLACE_OF_SETTINGS_BUTTON, SIZE_OF_SETTINGS_BUTTON),
-            text='Menu',
+            text=MENU_CONDITION_STRING,
             manager=self.manager)
 
         self.show_answer_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect(PLACE_OF_SHOW_ANSWER_BUTTON, SIZE_OF_SHOW_ANSWER_BUTTON),
-            text='Show Answer',
+            text=ANSWER_BUTTON_STRING,
             manager=self.manager)
 
     def ProcessEvents(self, event, mappa):
         """this function processing events for UI"""
-
-        key = pygame.key.get_pressed()
-        if key[pygame.K_ESCAPE]:
-            src.front.ui.InGameMenu()
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
-            if event.ui_element == self.settings_button:
-                src.front.ui.InGameMenu()
+            if event.ui_element == self.menu_button:
+
+                src.front.ui.MenuUI.InGameMenu()
             if event.ui_element == self.show_answer_button:
                 mappa.ShowAnswer()
 

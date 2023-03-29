@@ -7,6 +7,8 @@ import time
 from collections import deque
 
 random.seed(time.time())
+
+
 # random.seed(12)
 
 
@@ -14,7 +16,7 @@ class MapGenerator:
     """this class make able to generate maze and make able to operate with it"""
 
     @staticmethod
-    def GenerateMaze(size=(30, 20)):
+    def GenerateMaze(size):
         """generate maze as matrix with following size"""
 
         maze = []
@@ -24,7 +26,7 @@ class MapGenerator:
         return maze
 
     @staticmethod
-    def GetClearMap(size=(30, 20)):
+    def GetClearMap(size):
         """generate empty matrix with following size"""
 
         result = []
@@ -55,6 +57,8 @@ class MapGenerator:
     @staticmethod
     def GetAround(position: tuple, matrix):
         """return all nearby tiles on following position in matrix"""
+
+        # просто ифаю девять случаев не вижу нужды разбивать это на три функции
 
         result = []
         intermediate = []
@@ -120,11 +124,11 @@ class MapGenerator:
 
         around = MapGenerator.GetAround(position, matrix)
         res = []
-        for i in range(len(around)):
-            interm = []
+        for tile in range(len(around)):
+            intermediate = []
             for j in range(len(around[0]) - 1):
-                interm.append(around[i][j])
-            res.append(interm)
+                intermediate.append(around[tile][j])
+            res.append(intermediate)
         return res
 
     @staticmethod
@@ -133,8 +137,8 @@ class MapGenerator:
 
         around = MapGenerator.GetAround(position, matrix)
         res = []
-        for i in range(1, len(around)):
-            res.append(around[i])
+        for tile in range(1, len(around)):
+            res.append(around[tile])
         return res
 
     @staticmethod
@@ -144,10 +148,10 @@ class MapGenerator:
         around = MapGenerator.GetAround(position, matrix)
         res = []
         for i in range(len(around)):
-            interm = []
+            intermediate = []
             for j in range(1, len(around[0])):
-                interm.append(around[i][j])
-            res.append(interm)
+                intermediate.append(around[i][j])
+            res.append(intermediate)
         return res
 
     @staticmethod
@@ -168,10 +172,10 @@ class MapGenerator:
         """create matrix with specific size"""
 
         for i in range(size[0]):
-            interm = []
+            intermediate = []
             for j in range(size[1]):
-                interm.append(CHAR_FOR_EMPTY)
-            matrix.append(interm)
+                intermediate.append(CHAR_FOR_EMPTY)
+            matrix.append(intermediate)
 
     @staticmethod
     def SetBoardsOfMap(matrix):
@@ -192,18 +196,21 @@ class MapGenerator:
 
         dfs = DFSAlgo()
         prima = PrimaAlgo()
+
         first_coord = random.randrange(1, src.back.constants.SIZE_OF_MAP[0] - 1)
         second_coord = random.randrange(1, src.back.constants.SIZE_OF_MAP[1] - 1)
+
         test = src.back.constants.ALGO_FOR_GENERATION
+
         if src.back.constants.ALGO_FOR_GENERATION == 'DFS':
             dfs.DFSForPaths((first_coord, second_coord), matrix)
-            for i in dfs.GetPath():
-                matrix[i[0]][i[1]] = CHAR_FOR_PATH
+            for tile in dfs.GetPath():
+                matrix[tile[0]][tile[1]] = CHAR_FOR_PATH
             dfs.Clear()
         elif src.back.constants.ALGO_FOR_GENERATION == 'Prima':
             prima.PrimaForPaths((first_coord, second_coord), matrix)
-            for i in prima.GetPath():
-                matrix[i[0]][i[1]] = CHAR_FOR_PATH
+            for tile in prima.GetPath():
+                matrix[tile[0]][tile[1]] = CHAR_FOR_PATH
             prima.Clear()
 
     @staticmethod
@@ -237,56 +244,56 @@ class DFSAlgo:
         self.path.clear()
         self.used.clear()
 
+    def CanBePlaced(self, vertex, matrix):
+        sign = False
+        for neighbour in sum(MapGenerator.GetAround(vertex, matrix), []):
+            if neighbour in [(-1, -1), vertex]:
+                continue
+            if neighbour == self.parents.get(vertex):
+                continue
+            if MapGenerator.GetTile(neighbour, matrix) not in [CHAR_FOR_EMPTY, CHAR_FOR_BOARD]:
+                sign = True
+                continue
+            if self.used.get(neighbour):
+                if neighbour in sum(MapGenerator.GetAroundForDFS(vertex, self.parents[vertex], matrix), []):
+                    continue
+                sign = True
+                continue
+        return not sign
+
     def DFSForPaths(self, vertex, matrix):
         """random depth first search for generate random maze on empty matrix"""
 
-        sign = False
-        for i in MapGenerator.GetAround(vertex, matrix):
-            for j in i:
-                if j not in [(-1, -1), vertex]:
-                    if j == self.parents.get(vertex):
-                        continue
-                    if MapGenerator.GetTile(j, matrix) not in [CHAR_FOR_EMPTY, CHAR_FOR_BOARD]:
-                        sign = True
-                        continue
-                    if self.used.get(j):
-                        second_sign = False
-                        for k in MapGenerator.GetAroundForDFS(vertex, self.parents[vertex], matrix):
-                            if j in k:
-                                second_sign = True
-                                break
-                        if second_sign:
-                            continue
-                        sign = True
-                        continue
-        if sign:
+        if not self.CanBePlaced(vertex, matrix):
             return
         self.used[vertex] = True
         self.path.append(vertex)
         neighbours = MapGenerator.GetNeighbours(vertex, matrix).copy()
         while len(neighbours) != 0:
-            i = random.choice(neighbours)
-            neighbours.remove(i)
-            if self.used.get(i) is None and i != self.parents.get(vertex) and MapGenerator.GetTile(i, matrix) not in [
+            row = random.choice(neighbours)
+            neighbours.remove(row)
+            if self.used.get(row) is None and row != self.parents.get(vertex) and MapGenerator.GetTile(row,
+                                                                                                       matrix) not in [
                 CHAR_FOR_BOARD]:
-                self.parents[i] = vertex
-                self.DFSForPaths(i, matrix)
+                self.parents[row] = vertex
+                self.DFSForPaths(row, matrix)
 
     def RecursiveCall(self, vertex, matrix, set_of_tiles, tiles, current_depth, depth):
-        """help function for DFSOnTHeSpecificTIles"""
+        """help function for DFSOnTHeSpecificTiles"""
 
         self.used[vertex] = True
         self.path.append(vertex)
         set_of_tiles.append((vertex, MapGenerator.GetTile(vertex, matrix)))
         if current_depth >= depth:
             return
-        for i in MapGenerator.GetNeighbours(vertex, matrix):
-            if MapGenerator.GetTile(i, matrix) in tiles:
-                if self.used.get(i) is None and i != self.parents.get(vertex):
-                    self.parents[i] = vertex
-                    self.RecursiveCall(i, matrix, set_of_tiles, tiles, current_depth=current_depth + 1, depth=depth)
+        for neighbour in MapGenerator.GetNeighbours(vertex, matrix):
+            if MapGenerator.GetTile(neighbour, matrix) in tiles:
+                if self.used.get(neighbour) is None and neighbour != self.parents.get(vertex):
+                    self.parents[neighbour] = vertex
+                    self.RecursiveCall(neighbour, matrix, set_of_tiles, tiles, current_depth=current_depth + 1,
+                                       depth=depth)
 
-    def DFSOnTheSpecificTiles(self, vertex, matrix, set_of_tiles, tiles, depth=1000000):
+    def DFSOnTheSpecificTiles(self, vertex, matrix, set_of_tiles, tiles, depth=DEFAULT_LENGTH_FOR_DFS):
         """DFs which goes across the following tiles"""
 
         self.Clear()
@@ -316,44 +323,45 @@ class PrimaAlgo:
         self.closed.clear()
         self.path.clear()
 
+    def CanBePlaced(self, vertex, matrix):
+        sign = False
+        for neighbour in sum(MapGenerator.GetAround(vertex, matrix), []):
+            if neighbour in [(-1, -1), vertex]:
+                continue
+            if neighbour == self.parents.get(vertex):
+                continue
+            if MapGenerator.GetTile(neighbour, matrix) not in [CHAR_FOR_EMPTY, CHAR_FOR_BOARD]:
+                sign = True
+                continue
+            if self.closed.get(neighbour):
+                if neighbour in sum(MapGenerator.GetAroundForDFS(vertex, self.parents[vertex], matrix), []):
+                    continue
+                sign = True
+                continue
+        return not sign
+
     def PrimaForPaths(self, vertex, matrix):
         """prima algorithm with random choice from open tiles"""
 
         self.opened[vertex] = vertex
+
         while len(self.opened) != 0:
             current = [0, 0]
             if len(self.opened) == 1:
                 current = list(self.opened.items())[0][0]
             else:
                 current = random.choice(list(self.opened.values()))
+
             self.opened.pop(current)
-            sign = False
-            for i in MapGenerator.GetAround(current, matrix):
-                for j in i:
-                    if j not in [(-1, -1), current]:
-                        if j == self.parents.get(current):
-                            continue
-                        if MapGenerator.GetTile(j, matrix) not in [CHAR_FOR_EMPTY, CHAR_FOR_BOARD]:
-                            sign = True
-                            continue
-                        if self.closed.get(j):
-                            second_sign = False
-                            for k in MapGenerator.GetAroundForDFS(current, self.parents[current], matrix):
-                                if j in k:
-                                    second_sign = True
-                                    break
-                            if second_sign:
-                                continue
-                            sign = True
-                            continue
-            if sign:
+            if not self.CanBePlaced(current, matrix):
                 continue
             self.path.append(current)
             self.closed[current] = current
-            for i in MapGenerator.GetNeighbours(current, matrix):
-                if i not in self.closed and MapGenerator.GetTile(i, matrix) not in [CHAR_FOR_BOARD]:
-                    self.opened[i] = i
-                    self.parents[i] = current
+
+            for neighbour in MapGenerator.GetNeighbours(current, matrix):
+                if neighbour not in self.closed and MapGenerator.GetTile(neighbour, matrix) not in [CHAR_FOR_BOARD]:
+                    self.opened[neighbour] = neighbour
+                    self.parents[neighbour] = current
 
 
 class BFSAlgo:
@@ -373,16 +381,18 @@ class BFSAlgo:
         self.deque.appendleft(vertex)
         current = vertex
         self.parents[current] = current
+
         while len(self.deque) != 0:
             current = self.deque.pop()
             self.closed[current] = True
             if MapGenerator.GetTile(current, matrix) in [CHAR_FOR_EXIT]:
                 break
-            for i in MapGenerator.GetNeighbours(current, matrix):
-                if MapGenerator.GetTile(i, matrix) in [CHAR_FOR_PATH, CHAR_FOR_EXIT]:
-                    if i not in self.closed:
-                        self.parents[i] = current
-                        self.deque.appendleft(i)
+
+            for neighbour in MapGenerator.GetNeighbours(current, matrix):
+                if MapGenerator.GetTile(neighbour, matrix) in [CHAR_FOR_PATH, CHAR_FOR_EXIT]:
+                    if neighbour not in self.closed:
+                        self.parents[neighbour] = current
+                        self.deque.appendleft(neighbour)
 
         while current != self.parents[current]:
             self.path.append([current, CHAR_FOR_ANSWER])
