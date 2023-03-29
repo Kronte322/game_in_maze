@@ -2,13 +2,15 @@
 
 # Guide for build:
   ## first choose folder and clone repo and set branch:
-    * git clone git@github.com:Kronte322/maze_builder.git
-    * git checkout develope
+     git clone git@github.com:Kronte322/maze_builder.git
+     cd maze_builder
+     git checkout develope
   ## second install all packages that requires project on your folder with project:
-    * pip install pygame
-    * pip install pygame_gui
-    * pip install pygame_menu
-  ## third run main.py in ../main.py
+     pip install pygame
+     pip install pygame_gui
+     pip install pygame_menu
+  ## third run main.py:
+     python3 main.py
   
 * Возможности: выбирать размер лабиринта, сложность, алгоритм для генерации, in-game menu esc или нажатие на соответствующую кнопку, w a s d управление персонажем, кнопка, которая показыват правильный путь для решения лабиринта, выбирать персонажа, сохранять и загружать игровые сессии
 
