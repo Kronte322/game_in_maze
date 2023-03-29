@@ -9,6 +9,7 @@
      pip install pygame
      pip install pygame_gui
      pip install pygame_menu
+     pip install pickle
   ## third run main.py:
      python3 main.py
   
