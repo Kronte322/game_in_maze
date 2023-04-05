@@ -2,8 +2,8 @@
 
 import pygame
 import pygame_gui
-import src.front.ui
-from src.back.constants import *
+import src.front.Menus
+from src.back.Config import *
 
 
 class Ui:
@@ -26,7 +26,7 @@ class Ui:
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == self.menu_button:
 
-                src.front.ui.MenuUI.InGameMenu()
+                src.front.Menus.MenuUI.InGameMenu()
             if event.ui_element == self.show_answer_button:
                 mappa.ShowAnswer()
 

@@ -4,10 +4,11 @@ import pygame
 import random
 import time
 import sys
-from src.back.map_generator import *
-from src.back.constants import *
-import src.back.constants
-import src.front.ui
+from src.back.MapGenerator import *
+from src.back.Config import *
+import src.back.Config
+import src.back.Algorithms as Algo
+import src.front.Menus
 
 random.seed(time.time())
 # random.seed(SEED_FOR_TEST)
@@ -50,10 +51,15 @@ class Map:
         self.matrix_with_map = matrix_with_map
         self.matrix_with_visited = matrix_with_visited
         if self.matrix_with_map is None:
-            self.matrix_with_map = MapGenerator.GenerateMaze(src.back.constants.SIZE_OF_MAP)
+            algorithm = None
+            if src.back.Config.ALGO_FOR_GENERATION == 'DFS':
+                algorithm = Algo.DFSAlgo()
+            elif src.back.Config.ALGO_FOR_GENERATION == 'Prima':
+                algorithm = Algo.PrimaAlgo()
+            self.matrix_with_map = MapGenerator.GenerateMaze(src.back.Config.SIZE_OF_MAP, algorithm)
 
         if self.matrix_with_visited is None:
-            self.matrix_with_visited = MapGenerator.GetClearMap(src.back.constants.SIZE_OF_MAP)
+            self.matrix_with_visited = MapGenerator.GetClearMap(src.back.Config.SIZE_OF_MAP)
 
         self.mappa = pygame.Surface(
             (len(self.matrix_with_map) * SIZE_OF_TILE, len(self.matrix_with_map[0]) * SIZE_OF_TILE))
@@ -185,11 +191,11 @@ class Map:
             if self.GetTile(player_position) in [CHAR_FOR_PATH]:
                 self.dfs.DFSOnTheSpecificTiles(self.GetPositionOfTile(player_position), self.matrix_with_map,
                                                current_room, [CHAR_FOR_PATH, CHAR_FOR_EXIT],
-                                               depth=src.back.constants.LENGTH_OF_PATHS)
+                                               depth=src.back.Config.LENGTH_OF_PATHS)
                 self.tiles_for_current_room[
                     (self.GetPositionOfTile(player_position), self.GetTile(player_position))] = True
             elif self.GetTile(player_position) in [CHAR_FOR_EXIT]:
-                src.front.ui.MenuUI.ProcessingEndMenu()
+                src.front.Menus.MenuUI.ProcessingEndMenu()
 
             for tile in current_room:
                 self.visited_tiles[tile] = True
@@ -205,7 +211,7 @@ class Map:
         """this function blit map on the display"""
 
         display.blit(self.current_room, self.current_room_position)
-        if src.back.constants.DIFFICULTY < 3:
+        if src.back.Config.DIFFICULTY < 3:
             display.blit(pygame.transform.scale(self.visited_mappa, SIZE_OF_MINIMAP), POSITION_OF_MINIMAP)
 
     def MoveMap(self, vector_of_movement):
@@ -221,8 +227,8 @@ class Map:
         x_coord_spawn = 0
         y_coord_spawn = 0
         sign = False
-        for i in range(src.back.constants.SIZE_OF_MAP[0]):
-            for j in range(src.back.constants.SIZE_OF_MAP[0]):
+        for i in range(src.back.Config.SIZE_OF_MAP[0]):
+            for j in range(src.back.Config.SIZE_OF_MAP[0]):
                 if self.matrix_with_map[i][j] in [CHAR_FOR_PATH]:
                     x_coord_spawn = i
                     y_coord_spawn = j
@@ -238,8 +244,8 @@ class Map:
         x_coord_end = 0
         y_coord_end = 0
         sign = False
-        for i in range(src.back.constants.SIZE_OF_MAP[0])[::-1]:
-            for j in range(src.back.constants.SIZE_OF_MAP[0])[::-1]:
+        for i in range(src.back.Config.SIZE_OF_MAP[0])[::-1]:
+            for j in range(src.back.Config.SIZE_OF_MAP[0])[::-1]:
                 if self.matrix_with_map[i][j] in [CHAR_FOR_PATH]:
                     x_coord_end = i
                     y_coord_end = j
@@ -268,5 +274,5 @@ class Map:
     def ShowAnswer(self):
         """this method puts answer on the mini-map"""
 
-        src.back.constants.DIFFICULTY = 1
+        src.back.Config.DIFFICULTY = 1
         self.BlitSpecificOnMap(self.visited_mappa, self.answer)

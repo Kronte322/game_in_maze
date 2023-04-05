@@ -1,9 +1,9 @@
 """File contains class that process all events"""
 
 import pygame
-import src.front.ui
-import src.back.constants
-from src.back.constants import *
+import src.front.Menus
+import src.back.Config
+from src.back.Config import *
 
 
 class EventDistributor:
@@ -21,8 +21,8 @@ class EventDistributor:
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
-            src.back.constants.STATE = IN_GAME_MENU_STATE
-            src.front.ui.MenuUI.InGameMenu()
+            src.back.Config.STATE = IN_GAME_MENU_STATE
+            src.front.Menus.MenuUI.InGameMenu()
         if keys[pygame.K_w]:
             self.player.MoveUp(self.mappa)
         if keys[pygame.K_a]:
@@ -37,5 +37,5 @@ class EventDistributor:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                src.back.constants.RUNNING = False
+                src.back.Config.RUNNING = False
             self.ui.ProcessEvents(event, self.mappa)

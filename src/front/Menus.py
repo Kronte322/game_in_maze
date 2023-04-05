@@ -3,9 +3,9 @@
 import pygame
 import pygame_menu
 import pickle
-from src.back.constants import *
-import src.back.constants
-import src.front.main_loop
+from src.back.Config import *
+import src.back.Config
+import src.front.MainLoop
 import os
 from src.back.PackObjects import MapForPack, PlayerForPack
 
@@ -26,57 +26,57 @@ class MenuUI:
     def SetDifficultyFromMenu(key, value):
         """functions for set difficulty button in menu"""
 
-        src.back.constants.DIFFICULTY = value
+        src.back.Config.DIFFICULTY = value
         MenuUI.SetDifficulty()
 
     @staticmethod
     def StartTheGame():
         """function for start game button in menu"""
 
-        src.back.constants.STATE = IN_GAME_STATE
-        src.front.main_loop.ProcessingLoop(display)
+        src.back.Config.STATE = IN_GAME_STATE
+        src.front.MainLoop.ProcessingLoop(display)
 
     @staticmethod
     def SetDifficulty():
         """make difficulty futures alive"""
 
-        src.back.constants.LENGTH_OF_PATHS = LENGTHS_PATHS_ACCORDING_TO_DIFFICULTY[src.back.constants.DIFFICULTY]
+        src.back.Config.LENGTH_OF_PATHS = LENGTHS_PATHS_ACCORDING_TO_DIFFICULTY[src.back.Config.DIFFICULTY]
 
     @staticmethod
     def RetryTheGame():
         """function for retry game button in menu"""
 
-        src.back.constants.MAPPA = MAPPA
-        src.back.constants.PLAYER = PLAYER
-        src.back.constants.CHARACTER = CHARACTER
-        src.back.constants.DIFFICULTY = DIFFICULTY
-        src.back.constants.ALGO_FOR_GENERATION = DFS
-        src.back.constants.SIZE_OF_MAP = SIZE_OF_MAP
-        src.back.constants.STATE = START_MENU_STATE
+        src.back.Config.MAPPA = MAPPA
+        src.back.Config.PLAYER = PLAYER
+        src.back.Config.CHARACTER = CHARACTER
+        src.back.Config.DIFFICULTY = DIFFICULTY
+        src.back.Config.ALGO_FOR_GENERATION = DFS
+        src.back.Config.SIZE_OF_MAP = SIZE_OF_MAP
+        src.back.Config.STATE = START_MENU_STATE
         MenuUI.ProcessingStartMenu()
 
     @staticmethod
     def SetAlgorithm(key, value):
         """functions for set type of algorithm button in menu"""
 
-        src.back.constants.ALGO_FOR_GENERATION = value
+        src.back.Config.ALGO_FOR_GENERATION = value
 
     @staticmethod
     def SetSize(key, value):
         """functions for size button in menu"""
 
-        src.back.constants.SIZE_OF_MAP = value
+        src.back.Config.SIZE_OF_MAP = value
 
     @staticmethod
     def SetCharacter(key, value):
         """function for character selection"""
 
-        src.back.constants.CHARACTER = value
+        src.back.Config.CHARACTER = value
 
     @staticmethod
     def ProcessingStartMenu():
         """this function perform start menu"""
-        src.back.constants.STATE = START_MENU_STATE
+        src.back.Config.STATE = START_MENU_STATE
         start_menu = pygame_menu.Menu(WELCOME_CONDITION_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
                                       theme=pygame_menu.themes.THEME_BLUE)
         start_menu.add.button(PLAY_CONDITION_STRING, MenuUI.StartTheGame)
@@ -104,10 +104,10 @@ class MenuUI:
             """this function load saved session"""
 
             with open(PATH_TO_SAVED_MAZES + MenuUI.name_of_load, 'rb') as file:
-                src.back.constants.MAPPA = pickle.load(file).UnPack()
-                src.back.constants.PLAYER = pickle.load(file).UnPack()
-                first_test = src.back.constants.MAPPA
-                second_test = src.back.constants.PLAYER
+                src.back.Config.MAPPA = pickle.load(file).UnPack()
+                src.back.Config.PLAYER = pickle.load(file).UnPack()
+                first_test = src.back.Config.MAPPA
+                second_test = src.back.Config.PLAYER
             load_menu.disable()
 
         load_menu.add.button(BACK_CONDITION_STRING, load_menu.disable)
@@ -119,7 +119,7 @@ class MenuUI:
     def ProcessingEndMenu():
         """this function perform end menu"""
 
-        src.back.constants.STATE = END_GAME_MENU_STATE
+        src.back.Config.STATE = END_GAME_MENU_STATE
         end_menu = pygame_menu.Menu(WIN_CONDITION_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
                                     theme=pygame_menu.themes.THEME_BLUE)
         end_menu.add.button(RETRY_CONDITION_STRING, MenuUI.RetryTheGame)
@@ -143,13 +143,13 @@ class MenuUI:
     def InGameMenu():
         """this function perform in-game menu"""
 
-        src.back.constants.STATE = IN_GAME_MENU_STATE
+        src.back.Config.STATE = IN_GAME_MENU_STATE
 
         in_game_menu = pygame_menu.Menu(MENU_CONDITION_STRING, SIZE_OF_MENUS[0], SIZE_OF_MENUS[1],
                                         theme=pygame_menu.themes.THEME_BLUE)
 
         def MyDisable():
-            src.back.constants.STATE = IN_GAME_STATE
+            src.back.Config.STATE = IN_GAME_STATE
             in_game_menu.disable()
 
         in_game_menu.add.button(RESUME_CONDITION_STRING, MyDisable)
@@ -175,8 +175,8 @@ class MenuUI:
             """this function save session into file"""
 
             with open(PATH_TO_SAVED_MAZES + MenuUI.name_of_save, 'wb') as file:
-                pickle.dump(MapForPack(src.back.constants.MAPPA), file, protocol=pickle.HIGHEST_PROTOCOL)
-                pickle.dump(PlayerForPack(src.back.constants.PLAYER), file, protocol=pickle.HIGHEST_PROTOCOL)
+                pickle.dump(MapForPack(src.back.Config.MAPPA), file, protocol=pickle.HIGHEST_PROTOCOL)
+                pickle.dump(PlayerForPack(src.back.Config.PLAYER), file, protocol=pickle.HIGHEST_PROTOCOL)
             save_menu.disable()
 
         save_menu.add.button(BACK_CONDITION_STRING, save_menu.disable)

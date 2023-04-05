@@ -1,6 +1,6 @@
 """File contains player class"""
-import src.back.constants
-from src.back.constants import *
+import src.back.Config
+from src.back.Config import *
 import pygame
 
 
@@ -15,7 +15,7 @@ class Player:
         self.side = side
         self.character = character
         if self.character is None:
-            self.character = src.back.constants.CHARACTER
+            self.character = src.back.Config.CHARACTER
 
         self.hit_box = pygame.Rect(hit_box[0], hit_box[1])
         self.moveBox = (

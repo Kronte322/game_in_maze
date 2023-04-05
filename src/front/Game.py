@@ -1,8 +1,8 @@
 """File contains initialization of the game"""
 
 import pygame
-from src.front.ui import MenuUI
-from src.back.constants import *
+from src.front.Menus import MenuUI
+from src.back.Config import *
 
 
 class Game:

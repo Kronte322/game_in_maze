@@ -1,5 +1,5 @@
 """File contains execute"""
 
-from src.front.game import Game
+from src.front.Game import Game
 
 game = Game()
