@@ -4,7 +4,6 @@
   ## first choose folder and clone repo and set branch:
      git clone git@github.com:Kronte322/maze_builder.git
      cd maze_builder
-     git checkout develope
   ## second install all packages that requires project on your folder with project:
      pip install pygame
      pip install pygame_gui
